@@ -2,6 +2,7 @@
 
 namespace App\Exports;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Contracts\View\View;
 use Maatwebsite\Excel\Concerns\FromView;
 
@@ -18,17 +19,17 @@ class LaporanPresensiExport implements FromView
 
     public function view(): View
     {
-        $jamKerja = \DB::table('jam_kerja')->first();
+        $jamKerja = DB::table('jam_kerja')->first();
         $jamkantor = $jamKerja->jam_masuk;
         $namabulan = ["", "Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-        $pegawai = \DB::table('pegawais')->where('nik', $this->nik)->first();
-        $attendance = \DB::table('attendances')
+        $pegawai = DB::table('pegawais')->where('nik', $this->nik)->first();
+        $attendance = DB::table('attendances')
             ->where('nik', $this->nik)
             ->whereRaw('MONTH(tgl_presensi) = ?', [$this->bulan])
             ->whereRaw('YEAR(tgl_presensi) = ?', [$this->tahun])
             ->orderBy('tgl_presensi')
             ->get();
-         $izinMasukSiang = \DB::table('izin_khusus')
+         $izinMasukSiang = DB::table('izin_khusus')
                 ->select('nik', 'tanggal')
                 ->where('status', 1)
                 ->where('jenis_izin', 'masuk siang')
