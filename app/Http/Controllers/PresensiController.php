@@ -432,7 +432,7 @@ class PresensiController extends Controller
     public function izinkhusus()
     {
         $nik = Auth::guard('pegawai')->user()->nik;
-        $izinkhusus = DB::table('izin_Khusus')->where('nik', $nik)->get();
+        $izinkhusus = DB::table('izin_khusus')->where('nik', $nik)->get();
         return view('presensi.izinkhusus', compact('izinkhusus'));
     }
 
