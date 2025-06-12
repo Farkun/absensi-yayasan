@@ -14,28 +14,13 @@ class RedirectIfAuthenticated
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @param  string|null  ...$guards
+     * @param  string|null  ...$guard
      * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
      */
-    public function handle(Request $request, Closure $next, ...$guards)
+    public function handle(Request $request, Closure $next, $guard)
     {
-        $guards = empty($guards) ? [null] : $guards;
-        $authenticated = false;
-        $admin = false;
-        foreach ($guards as $guard) {
-            if (Auth::guard($guard)->check()) {
-                if ($guard == 'user') {
-                    $authenticated = true;
-                    $admin = true;
-                } else $authenticated = true;
-                // if ($guard == 'pegawai') return redirect(RouteServiceProvider::HOME);
-                // return redirect(RouteServiceProvider::HOMEADMIN);
-            }
-        }
-        if ($authenticated) {
-            if ($admin) return redirect(RouteServiceProvider::HOMEADMIN);
-            return redirect(RouteServiceProvider::HOME);
-        }
-        return $next($request);
+        if (Auth::guard('user')->check()) return redirect(RouteServiceProvider::HOMEADMIN);
+        elseif (Auth::guard('pegawai')->check()) return redirect(RouteServiceProvider::HOME);
+        else return $next($request);
     }
 }

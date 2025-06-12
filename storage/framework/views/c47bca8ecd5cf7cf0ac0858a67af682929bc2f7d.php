@@ -25,44 +25,45 @@
                             <a href="javascript:void(0)" data-toggle="dropdown">
                                 <i class="mdi mdi-bell-outline"></i>
                                 <!-- Tampilkan badge hanya jika ada notifikasi -->
-                                @if(count(auth()->guard('user')->user()->unreadNotifications) > 0)
+                                <?php if(count(auth()->guard('user')->user()->unreadNotifications) > 0): ?>
                                     <span
-                                        class="badge badge-pill gradient-2">{{ count(auth()->guard('user')->user()->unreadNotifications) }}</span>
-                                @endif
+                                        class="badge badge-pill gradient-2"><?php echo e(count(auth()->guard('user')->user()->unreadNotifications)); ?></span>
+                                <?php endif; ?>
                             </a>
                             <div class="drop-down animated fadeIn dropdown-menu dropdown-notfication">
                                 <div class="dropdown-content-heading d-flex justify-content-between">
-                                    @if(count(auth()->guard('user')->user()->unreadNotifications) > 0)
-                                        <span>{{ count(auth()->guard('user')->user()->unreadNotifications) }} New Notifications</span>
-                                    @else
+                                    <?php if(count(auth()->guard('user')->user()->unreadNotifications) > 0): ?>
+                                        <span><?php echo e(count(auth()->guard('user')->user()->unreadNotifications)); ?> New Notifications</span>
+                                    <?php else: ?>
                                         <span>No Notifications</span>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                                 <div class="dropdown-content-body">
                                     <ul>
-                                        @foreach(auth()->guard('user')->user()->unreadNotifications as $notification)
+                                        <?php $__currentLoopData = auth()->guard('user')->user()->unreadNotifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <li>
-                                                <a href="{{ route('notifications.read', ['id' => $notification->id]) }}">
+                                                <a href="<?php echo e(route('notifications.read', ['id' => $notification->id])); ?>">
                                                     <span class="mr-3 avatar-icon bg-success-lighten-2"><i
                                                             class="icon-present"></i></span>
                                                     <div class="notification-content">
                                                         <h6 class="notification-heading">
-                                                            {{ $notification->data['messages'] }}
+                                                            <?php echo e($notification->data['messages']); ?>
+
                                                         </h6>
                                                         <span
-                                                            class="notification-text">{{ $notification->created_at->diffForHumans() }}</span>
+                                                            class="notification-text"><?php echo e($notification->created_at->diffForHumans()); ?></span>
                                                     </div>
                                                 </a>
                                             </li>
-                                        @endforeach
+                                        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 
-                                    @if(count(auth()->guard('user')->user()->unreadNotifications) > 5)
+                                    <?php if(count(auth()->guard('user')->user()->unreadNotifications) > 5): ?>
                                         <div class="text-center mt-3">
-                                            <a href="{{ route('historinotif.index') }}" class="text-primary">Lihat Semua
+                                            <a href="<?php echo e(route('historinotif.index')); ?>" class="text-primary">Lihat Semua
                                                 Notifikasi</a>
                                         </div>
-                                    @endif
+                                    <?php endif; ?>
                                 </div>
                             </div>
                         </li>
@@ -82,7 +83,7 @@
                         <li class="icons dropdown">
                             <div class="user-img c-pointer position-relative"   data-toggle="dropdown">
                                 <!-- <span class="activity active"></span> -->
-                                <img src="{{ asset('admin/images/LOGO-YPB_BULAT.png') }}" height="40" width="40" alt="">
+                                <img src="<?php echo e(asset('admin/images/LOGO-YPB_BULAT.png')); ?>" height="40" width="40" alt="">
                             </div>
                             <div class="drop-down dropdown-profile animated fadeIn dropdown-menu">
                                 <div class="dropdown-content-body">
@@ -98,4 +99,4 @@
                     </ul>
                 </div>
             </div>
-        </div>
+        </div><?php /**PATH C:\xampp\htdocs\BHF\absensi-yayasan\resources\views/layouts/admin/header.blade.php ENDPATH**/ ?>

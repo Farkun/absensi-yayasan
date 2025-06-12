@@ -40,7 +40,7 @@ class PegawaiController extends Controller
             $foto = '';
         }
 
-        $data = [
+        $data = [[
             'nik' => $nik,
             'username' => $username,
             'nama_lengkap' => $nama_lengkap,
@@ -48,7 +48,7 @@ class PegawaiController extends Controller
             'jabatan' => $jabatan,
             'no_hp' => $no_hp,
             'foto' => $foto,
-        ];
+        ]];
 
         $simpan = DB::table('pegawais')->insert($data);
         if ($simpan) {
