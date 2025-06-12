@@ -26,48 +26,45 @@ class PegawaiController extends Controller
         $password = Hash::make('ypb12345');
         $jabatan = $request->jabatan;
         $no_hp = $request->no_hp;
+
+        // Cek apakah nik sudah ada di database
+        $cekNik = DB::table('pegawais')->where('nik', $nik)->exists();
+        if ($cekNik) {
+            return redirect()->back()->with('warning', 'Data dengan NIK ' . $nik . ' sudah ada.');
+        }
+
+        // Jika tidak ada, lanjut simpan
         if ($request->hasFile('foto')) {
             $foto = $nik . "." . time() . "." . $request->file('foto')->getClientOriginalExtension();
         } else {
-            $foto = null; // Gunakan foto lama jika tidak upload baru
+            $foto = '';
         }
 
-        // Buat email otomatis
-        // $slugNama = Str::limit(Str::slug($nama_lengkap, '.'), 15, ''); 
-        // $random = rand(100, 999);
-        // $email = $slugNama . $random . '@gmail.com';
+        $data = [
+            'nik' => $nik,
+            'username' => $username,
+            'nama_lengkap' => $nama_lengkap,
+            'password' => $password,
+            'jabatan' => $jabatan,
+            'no_hp' => $no_hp,
+            'foto' => $foto,
+        ];
 
-        // Cek apakah email sudah ada, jika iya, ulangi sampai unik
-        // while (DB::table('pegawais')->where('email', $email)->exists()) {
-        //     $random = rand(100, 999);
-        //     $email = $slugNama . $random . '@gmail.com';
-        // }
-
-        try {
-            $data = [
-                'nik' => $nik,
-                'username' => $username,
-                'nama_lengkap' => $nama_lengkap,
-                'password' => $password,
-                'jabatan' => $jabatan,
-                'no_hp' => $no_hp,
-                'foto' => $foto,
-            ];
-            $simpan = DB::table('pegawais')->insert($data);
-            if ($simpan) {
-                if ($request->hasFile('foto')) {
-                    $folderPath = "public/upload/pegawai/";
-                    $request->file('foto')->storeAs($folderPath, $foto);
-                }
-                return Redirect::back()->with(['success' => 'Data Berhasil Disimpan']);
+        $simpan = DB::table('pegawais')->insert($data);
+        if ($simpan) {
+            if ($request->hasFile('foto')) {
+                $folderPath = "public/upload/pegawai/";
+                $request->file('foto')->storeAs($folderPath, $foto);
             }
-        } catch (\Exception $e) {
-            if($e->getCode()==23000){
-                $message = " Data dengan NIK ". $nik . " Sudah Ada";
-            }
-            return Redirect::back()->with(['warning' => 'Data Gagal Disimpan'. $message]);
+            session()->forget('warning');
+            return Redirect::back()->with('success', 'Data Berhasil Disimpan');
+        } else {
+            return Redirect::back()->with('warning', 'Data Gagal Disimpan karena kesalahan sistem.');
         }
     }
+
+
+
 
     public function edit(Request $request)
     {
@@ -138,7 +135,8 @@ class PegawaiController extends Controller
 
     }
 
-    public function resetPassword(Request $request) {
+    public function resetPassword(Request $request)
+    {
         $nik = $request->nik;
         $pegawai = DB::table('pegawais')->where('nik', $nik)->first();
 
@@ -151,6 +149,6 @@ class PegawaiController extends Controller
         } else {
             return redirect('/pegawai')->with(['error' => 'Password gagal direset']);
         }
-    
+
     }
 }
