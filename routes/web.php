@@ -25,9 +25,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-
 Route::middleware(['guest:pegawai','prevent-back-history'])->group(function () {
-    Route::get('/', function () {
+    Route::get('/', function () {return redirect()->route('log');});
+    Route::get('/login', function () {
         return view('auth.login');
     })->name('log');
     Route::post('/login', [AuthController::class, 'login']);
@@ -39,6 +39,7 @@ Route::middleware(['guest:user','prevent-back-history'])->group(function () {
     })->name('loginadm');
     Route::post('/loginadmin', [AuthController::class, 'loginadmin']);
 });
+
 
 
 Route::middleware(['auth:pegawai', 'prevent-back-history'])->group(function () {

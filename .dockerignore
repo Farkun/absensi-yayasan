@@ -1,28 +1,5 @@
-<!-- # Direktori yang berisi dependensi yang akan diinstal di dalam container
-/vendor
-/node_modules
-
-# File konfigurasi sensitif atau spesifik lokal
-.env
-.env.backup
-.env.production
-
-# Direktori build frontend yang tidak perlu disalin jika Anda membangun aset di dalam container
-/public/build
-/public/hot
-
-# Folder cache atau log yang tidak perlu di dalam image
-/storage/*.key
-.phpunit.result.cache
-npm-debug.log
-yarn-error.log
-
-# File atau folder yang terkait dengan lingkungan pengembangan lokal atau IDE
-Homestead.json
-Homestead.yaml
-auth.json
-/.fleet
-/.idea
+.env.dev
+.env.example
+/.git
 /.vscode
-
-# JANGAN masukkan Dockerfile itu sendiri! -->
+README.md

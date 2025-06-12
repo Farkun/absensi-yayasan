@@ -10,14 +10,14 @@ class NotificationsController extends Controller
     public function getUnreadCount()
     {
         // Hitung jumlah notifikasi yang belum dibaca untuk pengguna yang sedang login
-        $unreadCount = auth()->user()->unreadNotifications->count();
+        $unreadCount = count(Auth::guard('user')->user()->unreadNotifications);
 
         return response()->json(['unread_count' => $unreadCount]);
     }
     public function markAsRead($id)
     {
         // Cari notifikasi berdasarkan ID (termasuk yang sudah dibaca)
-        $notification = auth()->user()->notifications->where('id', $id)->first();
+        $notification = Auth::guard('user')->user()->notifications->where('id', $id)->first();
 
         // Jika notifikasi ditemukan
         if ($notification) {
@@ -38,7 +38,7 @@ class NotificationsController extends Controller
     }
     public function history()
     {
-        $user = Auth::user();
+        $user = Auth::guard('user')->user();
         $notifications = $user->notifications()->orderBy('created_at', 'desc')->paginate(10); // Mengambil semua notifikasi user
         return view('historinotif.index', compact('notifications'));
     }
