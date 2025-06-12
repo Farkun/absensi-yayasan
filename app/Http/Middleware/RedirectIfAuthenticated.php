@@ -20,17 +20,22 @@ class RedirectIfAuthenticated
     public function handle(Request $request, Closure $next, ...$guards)
     {
         $guards = empty($guards) ? [null] : $guards;
-
+        $authenticated = false;
+        $admin = false;
         foreach ($guards as $guard) {
-            if (Auth::guard('pegawai')->check()) {
-                return redirect(RouteServiceProvider::HOME);
-            }
-
-            if (Auth::guard('user')->check()) {
-                return redirect(RouteServiceProvider::HOMEADMIN);
+            if (Auth::guard($guard)->check()) {
+                if ($guard == 'user') {
+                    $authenticated = true;
+                    $admin = true;
+                } else $authenticated = true;
+                // if ($guard == 'pegawai') return redirect(RouteServiceProvider::HOME);
+                // return redirect(RouteServiceProvider::HOMEADMIN);
             }
         }
-
+        if ($authenticated) {
+            if ($admin) return redirect(RouteServiceProvider::HOMEADMIN);
+            return redirect(RouteServiceProvider::HOME);
+        }
         return $next($request);
     }
 }
