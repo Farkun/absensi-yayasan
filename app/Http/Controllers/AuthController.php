@@ -14,7 +14,7 @@ class AuthController extends Controller
         if (Auth::guard('pegawai')->attempt(['username' => $request->username, 'password' => $request->password])) {
             return redirect('/dashboard');
         } else {
-            return redirect('/')->with(['warning' => 'Username / Password Wrong']);
+            return redirect('/login')->with(['warning' => 'Username / Password Wrong']);
         }
     }
 
@@ -29,7 +29,7 @@ class AuthController extends Controller
     public function logout(Request $request){
         if (Auth::guard('pegawai')->check()) {
             Auth::guard('pegawai')->logout();
-            return redirect('/');
+            return redirect('/login');
         }
     }
 

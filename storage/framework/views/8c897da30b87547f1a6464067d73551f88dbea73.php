@@ -25,22 +25,22 @@
                             <a href="javascript:void(0)" data-toggle="dropdown">
                                 <i class="mdi mdi-bell-outline"></i>
                                 <!-- Tampilkan badge hanya jika ada notifikasi -->
-                                <?php if(auth()->user()->unreadNotifications->count() > 0): ?>
+                                <?php if(count(auth()->guard('user')->user()->unreadNotifications) > 0): ?>
                                     <span
-                                        class="badge badge-pill gradient-2"><?php echo e(auth()->user()->unreadNotifications->count()); ?></span>
+                                        class="badge badge-pill gradient-2"><?php echo e(count(auth()->guard('user')->user()->unreadNotifications)); ?></span>
                                 <?php endif; ?>
                             </a>
                             <div class="drop-down animated fadeIn dropdown-menu dropdown-notfication">
                                 <div class="dropdown-content-heading d-flex justify-content-between">
-                                    <?php if(auth()->user()->unreadNotifications->count() > 0): ?>
-                                        <span><?php echo e(auth()->user()->unreadNotifications->count()); ?> New Notifications</span>
+                                    <?php if(count(auth()->guard('user')->user()->unreadNotifications) > 0): ?>
+                                        <span><?php echo e(count(auth()->guard('user')->user()->unreadNotifications)); ?> New Notifications</span>
                                     <?php else: ?>
                                         <span>No Notifications</span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="dropdown-content-body">
                                     <ul>
-                                         <?php $__currentLoopData = auth()->user()->unreadNotifications->take(5); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+                                        <?php $__currentLoopData = auth()->guard('user')->user()->unreadNotifications; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $notification): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
                                             <li>
                                                 <a href="<?php echo e(route('notifications.read', ['id' => $notification->id])); ?>">
                                                     <span class="mr-3 avatar-icon bg-success-lighten-2"><i
@@ -58,7 +58,7 @@
                                         <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
                                     </ul>
                                 
-                                    <?php if(auth()->user()->unreadNotifications->count() > 5): ?>
+                                    <?php if(count(auth()->guard('user')->user()->unreadNotifications) > 5): ?>
                                         <div class="text-center mt-3">
                                             <a href="<?php echo e(route('historinotif.index')); ?>" class="text-primary">Lihat Semua
                                                 Notifikasi</a>

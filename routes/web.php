@@ -42,7 +42,7 @@ Route::middleware(['guest:user','prevent-back-history'])->group(function () {
 
 
 
-Route::middleware(['auth:pegawai', 'prevent-back-history'])->group(function () {
+Route::middleware(['auth:pegawai','prevent-back-history'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index']);
     Route::get('/logout', [AuthController::class, 'logout']);
 
@@ -94,7 +94,7 @@ Route::middleware(['auth:pegawai', 'prevent-back-history'])->group(function () {
     //delete izin,sakit,cuti
     Route::post('/presensi/izin/delete', [IzinabsenController::class, 'delete'])->name('delete_izin');
 });
-Route::middleware(['auth:user', 'prevent-back-history'])->group(function () {
+Route::middleware(['auth:user','prevent-back-history'])->group(function () {
     Route::get('/logoutadmin', [AuthController::class, 'logoutadmin']);
     Route::get('/adm/dashboardadmin', [DashboardController::class, 'dashboardadmin']);
 
