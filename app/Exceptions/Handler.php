@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Exceptions;
-
+use Illuminate\Session\TokenMismatchException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Throwable;
 
@@ -47,4 +47,17 @@ class Handler extends ExceptionHandler
             //
         });
     }
+
+    // public function render($request, Throwable $exception)
+    // {
+    //     if ($exception instanceof TokenMismatchException) {
+    //         // Hapus session dan redirect ke login dengan pesan
+    //         session()->flush();
+    //         return redirect()
+    //             ->route('log') // ganti dengan route login kamu
+    //             ->with('error', 'Session expired. Silakan login kembali.');
+    //     }
+
+    //     return parent::render($request, $exception);
+    // }
 }

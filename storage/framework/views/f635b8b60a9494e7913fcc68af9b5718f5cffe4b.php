@@ -11,6 +11,9 @@
     <title>login</title>
     <meta name="description" content="Mobilekit HTML Mobile UI Kit">
     <meta name="keywords" content="bootstrap 4, mobile template, cordova, phonegap, mobile, html" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
     <link rel="icon" type="image/png" href="<?php echo e(asset('assets/img/favicon.png')); ?>" sizes="32x32">
     <link rel="apple-touch-icon" sizes="180x180" href="<?php echo e(asset('assets/img/icon/192x192.png')); ?>">
     <link rel="stylesheet" href="<?php echo e(asset('assets/css/style.css')); ?>">
@@ -38,19 +41,20 @@
             </div>
             <div class="section mt-1 mb-5">
                 <?php
-                $messagewarning = Session::get('warning');
+                    $messagewarning = Session::get('warning');
                 ?>
                 <?php if(Session::get('warning')): ?>
-                <div class="alert alert-outline-warning">
-                    <?php echo e($messagewarning); ?>
+                    <div class="alert alert-outline-warning">
+                        <?php echo e($messagewarning); ?>
 
-                </div>
+                    </div>
                 <?php endif; ?>
                 <form action="/login" method="POST">
                     <?php echo csrf_field(); ?>
                     <div class="form-group boxed">
                         <div class="input-wrapper">
-                            <input type="text" name="username" class="form-control" id="username" placeholder="Username" required>
+                            <input type="text" name="username" class="form-control" id="username" placeholder="Username"
+                                required>
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -59,7 +63,8 @@
 
                     <div class="form-group boxed">
                         <div class="input-wrapper">
-                            <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+                            <input type="password" name="password" class="form-control" id="password"
+                                placeholder="Password" required>
                             <i class="clear-input">
                                 <ion-icon name="close-circle"></ion-icon>
                             </i>
@@ -101,8 +106,13 @@
     <script src="<?php echo e(asset('assets/js/plugins/jquery-circle-progress/circle-progress.min.js')); ?>"></script>
     <!-- Base Js File -->
     <script src="<?php echo e(asset('assets/js/base.js')); ?>"></script>
-
-
+    <script>
+        window.addEventListener('pageshow', function (event) {
+            if (event.persisted || (window.performance && window.performance.navigation.type === 2)) {
+                window.location.reload();
+            }
+        });
+    </script>
 </body>
 
 </html><?php /**PATH C:\xampp\htdocs\attendance-ypb\resources\views/auth/login.blade.php ENDPATH**/ ?>

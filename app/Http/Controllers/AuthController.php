@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Session;
 use Hash;
 
 class AuthController extends Controller
@@ -25,14 +26,14 @@ class AuthController extends Controller
         }
     }
 
-    public function logout(){
+    public function logout(Request $request){
         if (Auth::guard('pegawai')->check()) {
             Auth::guard('pegawai')->logout();
             return redirect('/');
         }
     }
 
-    public function logoutadmin() {
+    public function logoutadmin(Request $request) {
         if (Auth::guard('user')->check()) {
             Auth::guard('user')->logout();
             return redirect('/adm');
