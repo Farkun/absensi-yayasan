@@ -26,15 +26,15 @@ class NotificationsController extends Controller
                 $notification->markAsRead();
             }
 
-            // Ambil URL dari data notifikasi atau gunakan default '/'
-            $redirectUrl = $notification->data['url'] ?? '/';
+            // Ambil URL dari data notifikasi atau gunakan default '/login'
+            $redirectUrl = $notification->data['url'] ?? '/login';
 
             // Arahkan pengguna ke URL yang ditentukan
             return redirect($redirectUrl);
         }
 
         // Jika notifikasi tidak ditemukan, arahkan ke halaman default
-        return redirect('/');
+        return redirect('/login');
     }
     public function history()
     {
