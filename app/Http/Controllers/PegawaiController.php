@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 // use Illuminate\Support\Facades\File;
@@ -26,6 +27,7 @@ class PegawaiController extends Controller
         $password = Hash::make('ypb12345');
         $jabatan = $request->jabatan;
         $no_hp = $request->no_hp;
+        $foto = null;
 
         // Cek apakah nik sudah ada di database
         $cekNik = DB::table('pegawais')->where('nik', $nik)->exists();
@@ -51,10 +53,13 @@ class PegawaiController extends Controller
         ]];
 
         $simpan = DB::table('pegawais')->insert($data);
-        if ($simpan) {
+        if ($simpan && $foto) {
             if ($request->hasFile('foto')) {
-                $folderPath = "public/upload/pegawai/";
-                $request->file('foto')->storeAs($folderPath, $foto);
+                // $folderPath = "public/upload/pegawai/";
+                // $request->file('foto')->storeAs($folderPath, $foto);
+                $folderPath = storage_path('/app/public/upload/pegawai');
+                if (!File::exists($folderPath)) File::makeDirectory($folderPath);
+                $request->foto->move($folderPath, $foto);
             }
             session()->forget('warning');
             return Redirect::back()->with('success', 'Data Berhasil Disimpan');
@@ -82,10 +87,12 @@ class PegawaiController extends Controller
         $jabatan = $request->jabatan;
         $no_hp = $request->no_hp;
         $pegawai = DB::table('pegawais')->where('nik', $nik)->first();
+        $foto = null;
         if ($request->hasFile('foto')) {
             $foto = $nik . "." . time() . "." . $request->file('foto')->getClientOriginalExtension();
             // Hapus foto lama jika ada
-            if (!empty($pegawai->foto)) {
+            // if (!empty($pegawai->foto)) {
+            if ($pegawai->foto) {
                 Storage::delete("public/upload/pegawai/{$pegawai->foto}");
             }
         } else {
@@ -102,10 +109,11 @@ class PegawaiController extends Controller
                 'foto' => $foto,
             ];
             $update = DB::table('pegawais')->where('nik', $nik)->update($data);
-            if ($update) {
+            if ($update && $foto) {
                 if ($request->hasFile('foto')) {
-                    $folderPath = "public/upload/pegawai/";
-                    $request->file('foto')->storeAs($folderPath, $foto);
+                    $folderPath = storage_path("/app/public/upload/pegawai");
+                    if (!File::exists($folderPath)) File::makeDirectory($folderPath);
+                    $request->foto->move($folderPath, $foto);
                 }
                 return Redirect::back()->with(['success' => 'Data Berhasil Diupdate']);
             }
@@ -121,7 +129,8 @@ class PegawaiController extends Controller
 
         if ($data) {
             // Hapus file gambar jika ada
-            if (!empty($data->foto)) {
+            // if (!empty($data->foto)) {
+            if ($data->foto) {
                 Storage::delete("public/upload/pegawai/{$data->foto}");
             }
 

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\Pegawai;
 use App\Notifications\PengajuanIzin;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
 
 class IzinsakitController extends Controller
@@ -26,7 +27,7 @@ class IzinsakitController extends Controller
         $gambar = null;
 
         if ($request->hasFile('gambar')) {
-            $folderPath = "upload/izin/";
+            $folderPath = "upload/izin";
             $file = $request->file('gambar');
 
             // Format nama file: nik-tglizin-status
@@ -40,10 +41,12 @@ class IzinsakitController extends Controller
             $filename = $baseName . '.' . $extension;
 
             // Simpan file
-            $file->storeAs('public/' . $folderPath, $filename);
+            $target_path = storage_path('/app/public/'.$folderPath);
+            if (!File::exists($target_path)) File::makeDirectory($target_path);
+            $file->move($target_path, $filename);
 
             // Set path untuk disimpan ke database
-            $gambar = $folderPath . $filename;
+            $gambar = $folderPath .'/'. $filename;
         }
 
         $data = [
@@ -97,7 +100,7 @@ class IzinsakitController extends Controller
 
         // Handle gambar baru
         if ($request->hasFile('gambar')) {
-            $folderPath = "upload/izin/";
+            $folderPath = "upload/izin";
             $file = $request->file('gambar');
 
             // Format nama file baru
@@ -112,9 +115,10 @@ class IzinsakitController extends Controller
             if ($tgl_izin_dari == $izin->tgl_izin_dari && $gambar && Storage::disk('public')->exists($gambar)) {
                 Storage::disk('public')->delete($gambar);
             }
-
-            $file->storeAs('public/' . $folderPath, $filename);
-            $gambar = $folderPath . $filename;
+            $target_path = storage_path('/app/public/'.$folderPath);
+            if (!File::exists($target_path)) File::makeDirectory($target_path);
+            $file->storeAs('public/' . $target_path, $filename);
+            $gambar = $folderPath .'/'. $filename;
         }
 
         $update = DB::table('pengajuan_izins')->where('id', $id)->update([
