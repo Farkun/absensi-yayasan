@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {return redirect()->route('log');});
 Route::get('/', function () {
-    return view('auth.login');
+    return view('frontpage');
 });
 Route::middleware(['guest:pegawai','prevent-back-history'])->group(function () {
     Route::get('/login', function () {
