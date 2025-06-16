@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Pegawai;
 use App\Notifications\IzinKhusus;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
 
 
@@ -135,7 +136,7 @@ class PresensiController extends Controller
                 ->where('nik', $nik)
                 ->update($data_pulang);
 
-            if ($update) {
+            if ($update && $image_base64) {
                 echo "success|Terima kasih, Hati-hati dijalan!|out";
                 Storage::put($file, $image_base64);
             } else {
@@ -192,12 +193,14 @@ class PresensiController extends Controller
 
         $nama_lengkap = $request->nama_lengkap;
         $no_hp = $request->no_hp;
+        $foto = null;
 
         // Handle upload foto baru
         if ($request->hasFile('foto')) {
             $foto = $nik . "." . time() . "." . $request->file('foto')->getClientOriginalExtension();
             // Hapus foto lama jika ada
-            if (!empty($pegawai->foto)) {
+            // if (!empty($pegawai->foto)) {
+            if ($pegawai->foto) {
                 Storage::delete("public/upload/pegawai/{$pegawai->foto}");
             }
         } else {
@@ -211,7 +214,8 @@ class PresensiController extends Controller
         ];
 
         // Cek apakah user ingin mengubah password
-        if (!empty($request->new_password)) {
+        // if (!empty($request->new_password)) {
+        if ($request->new_password) {
             // Validasi password lama
             if (!Hash::check($request->old_password, $pegawai->password)) {
                 return Redirect::back()->with('error', 'Password lama tidak sesuai.');
@@ -229,10 +233,11 @@ class PresensiController extends Controller
         // Update data di database
         $update = DB::table('pegawais')->where('nik', $nik)->update($data);
 
-        if ($update) {
+        if ($update && $foto) {
             if ($request->hasFile('foto')) {
-                $folderPath = "public/upload/pegawai/";
-                $request->file('foto')->storeAs($folderPath, $foto);
+                $folderPath = storage_path("public/upload/pegawai");
+                if (!File::exists($folderPath)) File::makeDirectory($folderPath);
+                $request->file('foto')->move($folderPath, $foto);
             }
             return Redirect::back()->with('success', 'Data berhasil diupdate.');
         } else {
@@ -292,7 +297,7 @@ class PresensiController extends Controller
         $gambar = null;
 
         if ($request->hasFile('gambar')) {
-            $folderPath = "upload/izin/";
+            $folderPath = "upload/izin";
             $file = $request->file('gambar');
 
             // Format nama file: nik-tglizin-status
@@ -306,10 +311,12 @@ class PresensiController extends Controller
             $filename = $baseName . '.' . $extension;
 
             // Simpan file
-            $file->storeAs('public/' . $folderPath, $filename);
+            $target_path = storage_path('/app/public/'.$folderPath);
+            if (!File::exists($target_path)) File::makeDirectory($target_path);
+            $file->move($target_path, $filename);
 
             // Set path untuk disimpan ke database
-            $gambar = $folderPath . $filename;
+            $gambar = $folderPath .'/'. $filename;
         }
 
         $data = [
@@ -374,7 +381,7 @@ class PresensiController extends Controller
 
         // Handle gambar baru
         if ($request->hasFile('gambar')) {
-            $folderPath = "upload/izin/";
+            $folderPath = "upload/izin";
             $file = $request->file('gambar');
 
             // Format nama file baru
@@ -389,9 +396,10 @@ class PresensiController extends Controller
             if ($tgl_izin == $izin->tgl_izin && $gambar && Storage::disk('public')->exists($gambar)) {
                 Storage::disk('public')->delete($gambar);
             }
-
-            $file->storeAs('public/' . $folderPath, $filename);
-            $gambar = $folderPath . $filename;
+            $target_path = storage_path('/app/public/'.$folderPath);
+            if (!File::exists($target_path)) File::makeDirectory($target_path);
+            $file->move($target_path, $filename);
+            $gambar = $folderPath .'/'. $filename;
         }
 
         $update = DB::table('pengajuan_izin')->where('id', $id)->update([
