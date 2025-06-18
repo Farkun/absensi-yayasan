@@ -76,7 +76,7 @@
                                         @endif
                                         <p>{{ $d->keterangan }}</p>
                                         <br><br>
-                                        @if ($d->gambar)
+                                        @if ($d->gambar && file_exists(public_path('storage/' . $d->gambar)))
                                             <a href="{{ asset('storage/' . $d->gambar) }}" class="btn btn-sm btn-success ms-2 p-1"
                                                 download>
                                                 <ion-icon name="download-outline" style="font-size: 18px;"></ion-icon>

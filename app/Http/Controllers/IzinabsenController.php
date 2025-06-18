@@ -44,12 +44,13 @@ class IzinabsenController extends Controller
             $filename = $baseName . '.' . $extension;
 
             // Simpan file
-            $target_path = storage_path('/app/public/'.$folderPath);
-            if (!File::exists($target_path)) File::makeDirectory($target_path);
+            $target_path = storage_path('/app/public/' . $folderPath);
+            if (!File::exists($target_path))
+                File::makeDirectory($target_path);
             $file->move($target_path, $filename);
 
             // Set path untuk disimpan ke database
-            $gambar = $folderPath .'/'. $filename;
+            $gambar = $folderPath . '/' . $filename;
         }
 
         $data = [
@@ -119,10 +120,12 @@ class IzinabsenController extends Controller
                 Storage::disk('public')->delete($gambar);
             }
 
-            $target_path = storage_path('/app/public/'.$folderPath);
-            if (!File::exists($target_path)) File::makeDirectory($target_path);
-            $file->storeAs($target_path, $filename);
-            $gambar = $folderPath .'/'. $filename;
+            $target_path = storage_path('app/public/' . $folderPath);
+            if (!File::exists($target_path)) {
+                File::makeDirectory($target_path, 0755, true);
+            }
+            Storage::disk('public')->putFileAs($folderPath, $file, $filename);
+            $gambar = $folderPath . '/' . $filename;
         }
 
         $update = DB::table('pengajuan_izins')->where('id', $id)->update([

@@ -18,11 +18,11 @@ return new class extends Migration
             $table->char('nik', 10);
             $table->date('tgl_presensi');
             $table->time('jam_in');
-            $table->time('jam_out');
+            $table->time('jam_out')->nullable();
             $table->string('bukti_in', 255);
-            $table->string('bukti_out', 255);
+            $table->string('bukti_out', 255)->nullable();
             $table->text('location_in');
-            $table->text('location_out');
+            $table->text('location_out')->nullable();
             $table->timestamps();
 
             // Foreign key constraint
