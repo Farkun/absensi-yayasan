@@ -80,12 +80,18 @@ class PresensiController extends Controller
 
         $ket = $cek > 0 ? "out" : "in";
         $image = $request->image;
-        $folderPath = "public/upload/absensi/";
+        // $folderPath = "public/upload/absensi/";
+        $folderPath = "upload/absensi";
         $formatName = $nik . "-" . $tgl_presensi . "-" . $ket;
         $image_parts = explode(";base64", $image);
         $image_base64 = base64_decode($image_parts[1]);
         $fileName = $formatName . ".png";
-        $file = $folderPath . $fileName;
+        // $file = $folderPath . $fileName;
+        $file = "public/{$folderPath}/{$fileName}";
+        $absolutePath = storage_path("app/public/" . $folderPath);
+        if (!\File::exists($absolutePath)) {
+            \File::makeDirectory($absolutePath, 0755, true);
+        }
         $izin = DB::table('izin_khusus')
             ->where('nik', $nik)
             ->where('tanggal', $tgl_presensi)
@@ -201,7 +207,8 @@ class PresensiController extends Controller
             // Hapus foto lama jika ada
             // if (!empty($pegawai->foto)) {
             if ($pegawai->foto) {
-                Storage::delete("public/upload/pegawai/{$pegawai->foto}");
+                Storage::disk('public')->delete("upload/pegawai/{$pegawai->foto}");
+                // Storage::delete("app/public/upload/pegawai/{$pegawai->foto}");
             }
         } else {
             $foto = $pegawai->foto; // Gunakan foto lama jika tidak upload baru
@@ -235,8 +242,9 @@ class PresensiController extends Controller
 
         if ($update && $foto) {
             if ($request->hasFile('foto')) {
-                $folderPath = storage_path("public/upload/pegawai");
-                if (!File::exists($folderPath)) File::makeDirectory($folderPath);
+                $folderPath = storage_path("app/public/upload/pegawai");
+                if (!File::exists($folderPath))
+                    File::makeDirectory($folderPath);
                 $request->file('foto')->move($folderPath, $foto);
             }
             return Redirect::back()->with('success', 'Data berhasil diupdate.');
@@ -311,12 +319,13 @@ class PresensiController extends Controller
             $filename = $baseName . '.' . $extension;
 
             // Simpan file
-            $target_path = storage_path('/app/public/'.$folderPath);
-            if (!File::exists($target_path)) File::makeDirectory($target_path);
+            $target_path = storage_path('/app/public/' . $folderPath);
+            if (!File::exists($target_path))
+                File::makeDirectory($target_path);
             $file->move($target_path, $filename);
 
             // Set path untuk disimpan ke database
-            $gambar = $folderPath .'/'. $filename;
+            $gambar = $folderPath . '/' . $filename;
         }
 
         $data = [
@@ -396,10 +405,11 @@ class PresensiController extends Controller
             if ($tgl_izin == $izin->tgl_izin && $gambar && Storage::disk('public')->exists($gambar)) {
                 Storage::disk('public')->delete($gambar);
             }
-            $target_path = storage_path('/app/public/'.$folderPath);
-            if (!File::exists($target_path)) File::makeDirectory($target_path);
+            $target_path = storage_path('/app/public/' . $folderPath);
+            if (!File::exists($target_path))
+                File::makeDirectory($target_path);
             $file->move($target_path, $filename);
-            $gambar = $folderPath .'/'. $filename;
+            $gambar = $folderPath . '/' . $filename;
         }
 
         $update = DB::table('pengajuan_izin')->where('id', $id)->update([

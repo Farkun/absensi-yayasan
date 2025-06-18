@@ -112,10 +112,8 @@ Route::middleware(['auth:user','prevent-back-history'])->group(function () {
     Route::post('/showmap', [PresensiController::class, 'showmap']);
 
     Route::get('/presensi/laporan', [PresensiController::class, 'laporan']);
-    Route::post('/presensi/cetaklaporan', [PresensiController::class, 'cetaklaporan']);
     Route::get('/presensi/rekap', [PresensiController::class, 'rekap']);
     Route::post('/presensi/cetakrekap', [PresensiController::class, 'cetakrekap']);
-    Route::post('/presensi/export-rekap-presensi', [PresensiController::class, 'exportRekapPresensi'])->name('export.rekap');
 
     Route::get('/konfigurasi/lokasikantor', [KonfigurasiController::class, 'lokasikantor']);
     Route::post('/konfigurasi/updatelokasikantor', [KonfigurasiController::class, 'updatelokasikantor']);
@@ -141,3 +139,7 @@ Route::middleware(['auth:user','prevent-back-history'])->group(function () {
     Route::get('/historinotif', [NotificationsController::class, 'history'])->name('historinotif.index');
 });
 
+Route::middleware(['auth:user'])->group(function () {
+Route::post('/presensi/cetaklaporan', [PresensiController::class, 'cetaklaporan']);
+Route::post('/presensi/export-rekap-presensi', [PresensiController::class, 'exportRekapPresensi'])->name('export.rekap');
+});
