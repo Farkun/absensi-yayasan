@@ -12,12 +12,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#000000">
     <title>Dashboard</title>
-    <meta name="description" content="Mobilekit HTML Mobile UI Kit">
+    <meta name="description" content="BHF_attendance">
     <meta name="keywords" content="bootstrap 4, mobile template, cordova, phonegap, mobile, html" />
-    <link rel="icon" type="image/png" href="{{ asset('assets/img/favicon.png') }}" sizes="32x32">
-    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/icon/192x192.png') }}">
+    <link rel="icon" type="image/png" href="{{ asset('assets/img/facation.png') }}" sizes="32x32">
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('assets/img/icon/logo.png') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
     <link rel="manifest" href="__manifest.json">
+    <!-- PWA  -->
+    <!-- <meta name="theme-color" content="#6777ef" />
+    <link rel="apple-touch-icon" href="{{ asset('logo.png') }}">
+    <link rel="manifest" href="{{ asset('/manifest.json') }}"> -->
     <style>
         .selectmaterialize {
             display: block;
@@ -63,6 +67,26 @@
 
     <!-- ///////////// Js Files ////////////////////  -->
     @include('layouts.script')
+
+     <script src="{{ asset('pwa-install.js') }}"></script>
+
+    <script src="{{ asset('/sw.js') }}"></script>
+    <!-- <script>
+        if ("serviceWorker" in navigator) {
+            // Register a service worker hosted at the root of the
+            // site using the default scope.
+            navigator.serviceWorker.register("/sw.js").then(
+                (registration) => {
+                    console.log("Service worker registration succeeded:", registration);
+                },
+                (error) => {
+                    console.error(`Service worker registration failed: ${error}`);
+                },
+            );
+        } else {
+            console.error("Service workers are not supported.");
+        }
+    </script> -->
 
 </body>
 
