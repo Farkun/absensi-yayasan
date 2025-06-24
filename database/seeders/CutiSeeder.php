@@ -17,12 +17,12 @@ class CutiSeeder extends Seeder
     {
         Cuti::insert([
             [
-                'kode_cuti' => 'C05',
+                'kode_cuti' => 'C01',
                 'nama_cuti' => 'Tahunan',
                 'jml_hari' => 12
             ],
             [
-                'kode_cuti' => 'C06',
+                'kode_cuti' => 'C02',
                 'nama_cuti' => 'Cuti Kompensasi',
                 'jml_hari' => 0
             ]
