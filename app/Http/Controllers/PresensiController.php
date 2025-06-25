@@ -362,90 +362,90 @@ class PresensiController extends Controller
         return $cek;
     }
 
-    public function editizin($id)
-    {
-        $izin = DB::table('pengajuan_izin')->where('id', $id)->first();
+    // public function editizin($id)
+    // {
+    //     $izin = DB::table('pengajuan_izin')->where('id', $id)->first();
 
-        if (!$izin) {
-            return redirect('/presensi/izin')->with(['error' => 'Data tidak ditemukan']);
-        }
+    //     if (!$izin) {
+    //         return redirect('/presensi/izin')->with(['error' => 'Data tidak ditemukan']);
+    //     }
 
-        return view('presensi.editizin', compact('izin'));
-    }
+    //     return view('presensi.editizin', compact('izin'));
+    // }
 
-    public function updateizin(Request $request)
-    {
-        $id = $request->id;
-        $izin = DB::table('pengajuan_izin')->where('id', $id)->first();
+    // public function updateizin(Request $request)
+    // {
+    //     $id = $request->id;
+    //     $izin = DB::table('pengajuan_izin')->where('id', $id)->first();
 
-        if (!$izin) {
-            return redirect('/presensi/izin')->with(['error' => 'Data tidak ditemukan']);
-        }
+    //     if (!$izin) {
+    //         return redirect('/presensi/izin')->with(['error' => 'Data tidak ditemukan']);
+    //     }
 
-        $nik = Auth::guard('pegawai')->user()->nik;
-        $tgl_izin = $request->tgl_izin;
-        $status = $request->status;
-        $keterangan = $request->keterangan;
-        $gambar = $izin->gambar;
+    //     $nik = Auth::guard('pegawai')->user()->nik;
+    //     $tgl_izin = $request->tgl_izin;
+    //     $status = $request->status;
+    //     $keterangan = $request->keterangan;
+    //     $gambar = $izin->gambar;
 
-        // Handle gambar baru
-        if ($request->hasFile('gambar')) {
-            $folderPath = "upload/izin";
-            $file = $request->file('gambar');
+    //     // Handle gambar baru
+    //     if ($request->hasFile('gambar')) {
+    //         $folderPath = "upload/izin";
+    //         $file = $request->file('gambar');
 
-            // Format nama file baru
-            $tglPresensiBaru = date('Ymd', strtotime($tgl_izin));
-            $cleanStatus = preg_replace('/[^A-Za-z0-9]/', '', $status);
-            $baseName = $nik . '-' . $tglPresensiBaru . '-' . $cleanStatus;
-            $baseName = substr($baseName, 0, 45);
-            $extension = $file->getClientOriginalExtension();
-            $filename = $baseName . '.' . $extension;
+    //         // Format nama file baru
+    //         $tglPresensiBaru = date('Ymd', strtotime($tgl_izin));
+    //         $cleanStatus = preg_replace('/[^A-Za-z0-9]/', '', $status);
+    //         $baseName = $nik . '-' . $tglPresensiBaru . '-' . $cleanStatus;
+    //         $baseName = substr($baseName, 0, 45);
+    //         $extension = $file->getClientOriginalExtension();
+    //         $filename = $baseName . '.' . $extension;
 
-            // Jika tanggal sama, hapus gambar lama
-            if ($tgl_izin == $izin->tgl_izin && $gambar && Storage::disk('public')->exists($gambar)) {
-                Storage::disk('public')->delete($gambar);
-            }
-            $target_path = storage_path('/app/public/' . $folderPath);
-            if (!File::exists($target_path))
-                File::makeDirectory($target_path);
-            $file->move($target_path, $filename);
-            $gambar = $folderPath . '/' . $filename;
-        }
+    //         // Jika tanggal sama, hapus gambar lama
+    //         if ($tgl_izin == $izin->tgl_izin && $gambar && Storage::disk('public')->exists($gambar)) {
+    //             Storage::disk('public')->delete($gambar);
+    //         }
+    //         $target_path = storage_path('/app/public/' . $folderPath);
+    //         if (!File::exists($target_path))
+    //             File::makeDirectory($target_path);
+    //         $file->move($target_path, $filename);
+    //         $gambar = $folderPath . '/' . $filename;
+    //     }
 
-        $update = DB::table('pengajuan_izin')->where('id', $id)->update([
-            'tgl_izin' => $tgl_izin,
-            'status' => $status,
-            'keterangan' => $keterangan,
-            'gambar' => $gambar
-        ]);
+    //     $update = DB::table('pengajuan_izin')->where('id', $id)->update([
+    //         'tgl_izin' => $tgl_izin,
+    //         'status' => $status,
+    //         'keterangan' => $keterangan,
+    //         'gambar' => $gambar
+    //     ]);
 
-        if ($update) {
-            return redirect('/presensi/izin')->with(['success' => 'Data berhasil diupdate']);
-        } else {
-            return redirect('/presensi/izin')->with(['error' => 'Data gagal diupdate']);
-        }
-    }
+    //     if ($update) {
+    //         return redirect('/presensi/izin')->with(['success' => 'Data berhasil diupdate']);
+    //     } else {
+    //         return redirect('/presensi/izin')->with(['error' => 'Data gagal diupdate']);
+    //     }
+    // }
 
 
-    public function deleteizin(Request $request)
-    {
-        $id = $request->id;
-        $data = DB::table('pengajuan_izin')->where('id', $id)->first();
+    // public function deleteizin(Request $request)
+    // {
+    //     $id = $request->id;
+    //     $data = DB::table('pengajuan_izin')->where('id', $id)->first();
 
-        if ($data) {
-            // Hapus file gambar jika ada
-            if ($data->gambar) {
-                Storage::disk('public')->delete($data->gambar);
-            }
+    //     if ($data) {
+    //         // Hapus file gambar jika ada
+    //         if ($data->gambar) {
+    //             Storage::disk('public')->delete($data->gambar);
+    //         }
 
-            // Hapus data izin
-            DB::table('pengajuan_izin')->where('id', $id)->delete();
+    //         // Hapus data izin
+    //         DB::table('pengajuan_izin')->where('id', $id)->delete();
 
-            return redirect('/presensi/izin')->with(['success' => 'Data berhasil dihapus']);
-        } else {
-            return redirect('/presensi/izin')->with(['error' => 'Data tidak ditemukan']);
-        }
-    }
+    //         return redirect('/presensi/izin')->with(['success' => 'Data berhasil dihapus']);
+    //     } else {
+    //         return redirect('/presensi/izin')->with(['error' => 'Data tidak ditemukan']);
+    //     }
+    // }
 
     public function izinkhusus()
     {
