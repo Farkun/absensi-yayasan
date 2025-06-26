@@ -853,6 +853,7 @@ class PresensiController extends Controller
         $dataizinkhusus = DB::table('izin_khusus')
             ->join('pegawais', 'izin_khusus.nik', '=', 'pegawais.nik')
             ->orderByDesc('tanggal')
+            ->select('izin_khusus.*', 'pegawais.nama_lengkap as nama_lengkap', 'pegawais.jabatan as jabatan')
             ->get();
         return view('presensi.dataizinkhusus', compact('dataizinkhusus'));
     }
