@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('pengajuan_izin', function (Blueprint $table) {
             $table->id();
-            $table->char('nik', 10);
+            $table->char('nik', 16);
             $table->date('tgl_izin');
             $table->char('status', 1);
             $table->string('keterangan', 255);

@@ -89,8 +89,8 @@ class PresensiController extends Controller
         // $file = $folderPath . $fileName;
         $file = "public/{$folderPath}/{$fileName}";
         $absolutePath = storage_path("app/public/" . $folderPath);
-        if (!\File::exists($absolutePath)) {
-            \File::makeDirectory($absolutePath, 0755, true);
+        if (!File::exists($absolutePath)) {
+            File::makeDirectory($absolutePath, 0755, true);
         }
         $izin = DB::table('izin_khusus')
             ->where('nik', $nik)
@@ -853,6 +853,7 @@ class PresensiController extends Controller
         $dataizinkhusus = DB::table('izin_khusus')
             ->join('pegawais', 'izin_khusus.nik', '=', 'pegawais.nik')
             ->orderByDesc('tanggal')
+            ->select('izin_khusus.*', 'pegawais.nama_lengkap as nama_lengkap', 'pegawais.jabatan as jabatan')
             ->get();
         return view('presensi.dataizinkhusus', compact('dataizinkhusus'));
     }
