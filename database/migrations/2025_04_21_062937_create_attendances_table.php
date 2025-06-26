@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('attendances', function (Blueprint $table) {
             $table->id();
-            $table->char('nik', 10);
+            $table->char('nik', 16);
             $table->date('tgl_presensi');
             $table->time('jam_in');
             $table->time('jam_out')->nullable();

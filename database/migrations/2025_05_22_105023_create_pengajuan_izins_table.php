@@ -14,7 +14,7 @@ return new class extends Migration {
     {
         Schema::create('pengajuan_izins', function (Blueprint $table) {
             $table->id();
-            $table->char('nik', 10); 
+            $table->char('nik', 16); 
             $table->date('tgl_izin_dari');
             $table->date('tgl_izin_sampai');
             $table->char('status', 1)->comment('i: izin, s: sakit');
