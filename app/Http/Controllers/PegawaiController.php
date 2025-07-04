@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pegawai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -110,15 +111,15 @@ class PegawaiController extends Controller
             ];
             $update = DB::table('pegawais')->where('nik', $nik)->update($data);
             if ($update && $foto) {
-                if ($request->hasFile('foto')) {
+                // if ($request->hasFile('foto')) {
                     $folderPath = storage_path("/app/public/upload/pegawai");
                     if (!File::exists($folderPath)) File::makeDirectory($folderPath);
                     $request->foto->move($folderPath, $foto);
-                }
-                return Redirect::back()->with(['success' => 'Data Berhasil Diupdate']);
+                // }
             }
+            return Redirect::back()->with('success', 'Data Berhasil Diupdate');
         } catch (\Exception $e) {
-            return Redirect::back()->with(['warning' => 'Data Gagal Diupdate']);
+            return Redirect::back()->with('warning', 'Data Gagal Diupdate');
         }
     }
 
@@ -135,7 +136,9 @@ class PegawaiController extends Controller
             }
 
             // Hapus data pegawai
-            DB::table('pegawais')->where('nik', $nik)->delete();
+            // DB::table('pegawais')->where('nik', $nik)->delete();
+            DB::table('attendances')->where('nik', $nik)->delete();
+            Pegawai::find($nik)->delete();
 
             return redirect('/pegawai')->with(['success' => 'Data berhasil dihapus']);
         } else {

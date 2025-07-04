@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('pegawais', function (Blueprint $table) {
             $table->char('nik', 16)->primary();
-            $table->string('username', 10);
+            $table->string('username', 50);
             $table->string('nama_lengkap', 100);
             $table->string('jabatan', 20);
             $table->string('no_hp', 13);
