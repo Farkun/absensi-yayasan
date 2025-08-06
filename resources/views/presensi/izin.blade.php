@@ -50,6 +50,8 @@
                 $status = "Sakit";
                 } elseif ($d->status=="c"){
                 $status = "Cuti";
+                } elseif ($d->status=="r"){
+                $status = "Remote";
                 } else {
                 $status = "Not Found";
                 } 
@@ -64,6 +66,8 @@
                                         @elseif ($d->status == "s")
                                         <ion-icon name="medkit-outline"></ion-icon>
                                         @elseif ($d->status == "c")
+                                        <ion-icon name="calendar-outline"></ion-icon>
+                                        @elseif ($d->status == "r")
                                         <ion-icon name="calendar-outline"></ion-icon>
                                         @endif
                                         <b>{{ date("d-m-Y", strtotime($d->tgl_izin_dari)) }}
@@ -92,6 +96,10 @@
                                             </a>
                                         @elseif ($d->status == "c" && $d->status_approved == '0')
                                             <a href="{{ route('edit_cuti', $d->id) }}" class="btn btn-sm btn-warning ms-2 p-1">
+                                                <ion-icon name="create-outline" style="font-size: 18px;"></ion-icon>
+                                            </a>
+                                        @elseif ($d->status == "r" && $d->status_approved == '0')
+                                            <a href="{{ route('edit_remote', $d->id) }}" class="btn btn-sm btn-warning ms-2 p-1">
                                                 <ion-icon name="create-outline" style="font-size: 18px;"></ion-icon>
                                             </a>
                                         @endif
@@ -144,6 +152,10 @@
                 <a class="dropdown-item bg-primary" href="/izincuti">
                     <ion-icon name="document-outline" role="img" class="md-hydrated" aria-label="videocam outline"></ion-icon>
                     <p>Cuti</p>
+                </a>
+                <a class="dropdown-item bg-primary" href="/izinremote">
+                    <ion-icon name="document-outline" role="img" class="md-hydrated" aria-label="image outline"></ion-icon>
+                    <p>Izin Remote</p>
                 </a>
             </div>
         </div>

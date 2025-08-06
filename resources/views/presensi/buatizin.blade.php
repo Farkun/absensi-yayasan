@@ -33,6 +33,7 @@
                         <option value="">Izin / Sakit</option>
                         <option value="i">Izin</option>
                         <option value="s">Sakit</option>
+                        <option value="r">remote</option>
                     </select>
                 </div>
                 <div class="form-group">

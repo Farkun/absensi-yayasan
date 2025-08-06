@@ -38,7 +38,8 @@
                                                         {{
                                                             $d->status == "i" ? "Izin" :
                                                             ($d->status == "s" ? "Sakit" :
-                                                            ($d->status == "c" ? "Cuti" : "Tidak Diketahui"))
+                                                            ($d->status == "c" ? "Cuti" : 
+                                                            ($d->status == "r" ? "Remote" :"Tidak Diketahui")))
                                                         }}
                                                     </td>
                                                     <td>{{ $d->keterangan }}</td>
