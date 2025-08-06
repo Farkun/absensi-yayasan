@@ -160,16 +160,21 @@ class PresensiController extends Controller
                 'bukti_in' => $fileName,
                 'location_in' => $lokasi
             ];
-
-            $simpan = DB::table('attendances')->insert($data);
+            DB::table('attendances')->insert([$data]);
+            return "success|Terima kasih, Selamat bekerja!|in";
             Storage::put($file, $image_base64);
-            if ($simpan) {
-                if ($jam > $jamMasuk) {
-                    echo "success|Terima kasih, Selamat bekerja!|in";
-                }
-            } else {
-                echo "error|Maaf Absensi anda Gagal, Silahkan coba lagi atau hubungi IT|in";
-            }
+          
+            // FROM MAIN
+            // $simpan = DB::table('attendances')->insert($data);
+            // Storage::put($file, $image_base64);
+            // if ($simpan) {
+            //     if ($jam > $jamMasuk) {
+            //         echo "success|Terima kasih, Selamat bekerja!|in";
+            //     }
+            // } else {
+            //     echo "error|Maaf Absensi anda Gagal, Silahkan coba lagi atau hubungi IT|in";
+            // }
+            // end- FROM MAIN
         }
 
     }
