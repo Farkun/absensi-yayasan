@@ -5,6 +5,7 @@ use App\Http\Controllers\CutiController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\IzinabsenController;
 use App\Http\Controllers\IzincutiController;
+use App\Http\Controllers\IzinremoteController;
 use App\Http\Controllers\IzinsakitController;
 use App\Http\Controllers\KonfigurasiController;
 use App\Http\Controllers\PegawaiController;
@@ -85,6 +86,12 @@ Route::middleware(['auth:pegawai','prevent-back-history'])->group(function () {
         Route::post('/izinsakit/store', [IzinsakitController::class, 'store']);
         Route::get('/izinsakit/edit/{id}', [IzinsakitController::class, 'edit'])->name('edit_sakit');
         Route::post('/izinsakit/update', [IzinsakitController::class, 'update'])->name('update_sakit');
+
+        //absensi izin
+        Route::get('/izinremote', [IzinremoteController::class, 'create']);
+        Route::post('/izinremote/store', [IzinremoteController::class, 'store']);
+        Route::get('/izinremote/edit/{id}', [IzinremoteController::class, 'edit'])->name('edit_remote');
+        Route::post('/izinremote/update', [IzinremoteController::class, 'update'])->name('update_remote');
 
         //izin cuti 
         Route::get('/izincuti', [IzincutiController::class, 'create']);

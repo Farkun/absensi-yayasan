@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('izin_khusus', function (Blueprint $table) {
             $table->id();
-            $table->char('nik',10);
+            $table->char('nik',16);
             $table->date('tanggal');
             $table->string('jenis_izin'); // ex: 'Setengah Hari', 'Pulang Awal'
             $table->time('jam_izin')->nullable(); // contoh: jam masuk 13:00 jika setengah hari

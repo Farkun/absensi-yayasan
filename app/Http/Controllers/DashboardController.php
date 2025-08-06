@@ -21,7 +21,7 @@ class DashboardController extends Controller
             ->where('nik', $nik)
             ->whereRaw('MONTH(tgl_presensi)="' . $bulanini . '"')
             ->whereRaw('YEAR(tgl_presensi)="' . $tahunini . '"')
-            ->orderBy('tgl_presensi')
+            ->orderBy('tgl_presensi', 'desc')
             ->get();
 
         // $rekappresensi = DB::table('attendances')
@@ -66,7 +66,7 @@ class DashboardController extends Controller
         //     ->where('status_approved', 1)
         //     ->first();
         $rekapizin = DB::table('pengajuan_izins')
-            ->selectRaw('SUM(IF(status="i",1,0)) as jmlizin,SUM(IF(status="s",1,0)) as jmlsakit,SUM(IF(status="c",1,0)) as jmlcuti')
+            ->selectRaw('SUM(IF(status="i",1,0)) as jmlizin,SUM(IF(status="s",1,0)) as jmlsakit,SUM(IF(status="c",1,0)) as jmlcuti, SUM(IF(status="r",1,0)) as jmlremote')
             ->where('nik', $nik)
             ->whereRaw('MONTH(tgl_izin_dari)="' . $bulanini . '"')
             ->whereRaw('YEAR(tgl_izin_dari)="' . $tahunini . '"')
@@ -122,7 +122,8 @@ class DashboardController extends Controller
             ->selectRaw('
                 COUNT(DISTINCT CASE WHEN status = "i" THEN nik END) as jmlizin,
                 COUNT(DISTINCT CASE WHEN status = "s" THEN nik END) as jmlsakit,
-                COUNT(DISTINCT CASE WHEN status = "c" THEN nik END) as jmlcuti
+                COUNT(DISTINCT CASE WHEN status = "c" THEN nik END) as jmlcuti,
+                COUNT(DISTINCT CASE WHEN status = "r" THEN nik END) as jmlremote
             ')
             ->whereDate('tgl_izin_dari', '<=', $hariini)
             ->whereDate('tgl_izin_sampai', '>=', $hariini)

@@ -54,7 +54,7 @@ class PegawaiController extends Controller
         ]];
 
         $simpan = DB::table('pegawais')->insert($data);
-        if ($simpan && $foto) {
+        if ($simpan) {
             if ($request->hasFile('foto')) {
                 // $folderPath = "public/upload/pegawai/";
                 // $request->file('foto')->storeAs($folderPath, $foto);

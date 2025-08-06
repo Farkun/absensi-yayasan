@@ -45,6 +45,7 @@ class PresensiController extends Controller
             ->first();
 
         if ($cek_pengajuan) {
+            if (strtolower($cek_pengajuan->status) != 'r') {
             // Konversi kode status ke teks
             $jenis = match (strtolower($cek_pengajuan->status)) {
                 'i' => 'Izin',
@@ -56,7 +57,10 @@ class PresensiController extends Controller
             echo "error|Tidak bisa absen karena Anda memiliki pengajuan $jenis yang disetujui pada tanggal ini|";
             return;
         }
-
+        $izin_remote = true;
+    } else {
+        $izin_remote = false;
+    } 
 
         $lok_kantor = DB::table('konfigurasi_lokasi')->where('id', 1)->first();
         $lok = explode(",", $lok_kantor->lokasi_kantor);
@@ -80,25 +84,25 @@ class PresensiController extends Controller
 
         $ket = $cek > 0 ? "out" : "in";
         $image = $request->image;
-        // $folderPath = "public/upload/absensi/";
-        $folderPath = "upload/absensi";
+        $folderPath = "public/upload/absensi/";
+        // $folderPath = "upload/absensi";
         $formatName = $nik . "-" . $tgl_presensi . "-" . $ket;
         $image_parts = explode(";base64", $image);
         $image_base64 = base64_decode($image_parts[1]);
         $fileName = $formatName . ".png";
-        // $file = $folderPath . $fileName;
-        $file = "public/{$folderPath}/{$fileName}";
-        $absolutePath = storage_path("app/public/" . $folderPath);
-        if (!File::exists($absolutePath)) {
-            File::makeDirectory($absolutePath, 0755, true);
-        }
+        $file = $folderPath . $fileName;
+        // $file = "public/{$folderPath}/{$fileName}";
+        // $absolutePath = storage_path("app/public/" . $folderPath);
+        // if (!\File::exists($absolutePath)) {
+        //     \File::makeDirectory($absolutePath, 0755, true);
+        // }
         $izin = DB::table('izin_khusus')
             ->where('nik', $nik)
             ->where('tanggal', $tgl_presensi)
             ->where('status', '1')
             ->first();
 
-        if ($radius > $lok_kantor->radius) {
+        if (!$izin_remote && $radius > $lok_kantor->radius) {
             echo "error|Maaf anda berada diluar Radius, Jarak anda " . $radius . " meter dari kantor|";
             return;
         }
@@ -156,19 +160,21 @@ class PresensiController extends Controller
                 'bukti_in' => $fileName,
                 'location_in' => $lokasi
             ];
-                
-            // $simpan = DB::table('attendances')->insert([$data]);
             DB::table('attendances')->insert([$data]);
             return "success|Terima kasih, Selamat bekerja!|in";
             Storage::put($file, $image_base64);
+          
+            // FROM MAIN
+            // $simpan = DB::table('attendances')->insert($data);
+            // Storage::put($file, $image_base64);
             // if ($simpan) {
             //     if ($jam > $jamMasuk) {
-            //         return "success|Terima kasih, Selamat bekerja!|in";
+            //         echo "success|Terima kasih, Selamat bekerja!|in";
             //     }
-            //     Storage::put($file, $image_base64);
             // } else {
-            //     return "error|Maaf Absensi anda Gagal, Silahkan coba lagi atau hubungi IT|in";
+            //     echo "error|Maaf Absensi anda Gagal, Silahkan coba lagi atau hubungi IT|in";
             // }
+            // end- FROM MAIN
         }
 
     }
@@ -252,6 +258,9 @@ class PresensiController extends Controller
             }
             return Redirect::back()->with('success', 'Data berhasil diupdate.');
         } else {
+            if ($request->new_password) {
+                return Redirect::back()->with('success', 'Password berhasil diupdate');
+            } 
             return Redirect::back()->with('error', 'Data gagal diupdate.');
         }
     }
@@ -290,7 +299,8 @@ class PresensiController extends Controller
         $nik = Auth::guard('pegawai')->user()->nik;
         $dataizin = DB::table('pengajuan_izins')
             ->leftJoin('master_cuti', 'pengajuan_izins.kode_cuti', '=', 'master_cuti.kode_cuti')
-            ->where('nik', $nik)->get();
+            ->where('nik', $nik)
+            ->orderBy('tgl_izin_dari', 'desc')->get();
         return view('presensi.izin', compact('dataizin'));
     }
 

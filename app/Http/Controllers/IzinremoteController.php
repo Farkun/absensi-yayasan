@@ -6,18 +6,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use App\Models\User;
 use App\Models\Pegawai;
 use App\Notifications\PengajuanIzin;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
 
-
-class IzinabsenController extends Controller
+class IzinremoteController extends Controller
 {
     public function create()
     {
-        return view('izin.create');
+        return view('remote.create');
     }
 
     public function store(Request $request)
@@ -25,7 +24,7 @@ class IzinabsenController extends Controller
         $nik = Auth::guard('pegawai')->user()->nik;
         $tgl_izin_dari = $request->tgl_izin_dari;
         $tgl_izin_sampai = $request->tgl_izin_sampai;
-        $status = "i";
+        $status = "r";
         $keterangan = $request->keterangan;
         $gambar = null;
 
@@ -83,7 +82,7 @@ class IzinabsenController extends Controller
             return redirect('/presensi/izin')->with(['error' => 'Data tidak ditemukan']);
         }
 
-        return view('izin.edit', compact('izin'));
+        return view('remote.edit', compact('izin'));
     }
 
     public function update(Request $request)
@@ -98,7 +97,7 @@ class IzinabsenController extends Controller
         $nik = Auth::guard('pegawai')->user()->nik;
         $tgl_izin_dari = $request->tgl_izin_dari;
         $tgl_izin_sampai = $request->tgl_izin_sampai;
-        $status = "i";
+        $status = "r";
         $keterangan = $request->keterangan;
         $gambar = $izin->gambar;
 
@@ -142,48 +141,4 @@ class IzinabsenController extends Controller
             return redirect('/presensi/izin')->with(['error' => 'Data gagal diupdate']);
         }
     }
-
-    public function delete(Request $request)
-    {
-        $id = $request->id;
-        $data = DB::table('pengajuan_izins')->where('id', $id)->first();
-
-        if ($data) {
-            // Hapus file gambar jika ada
-            if ($data->gambar) {
-                Storage::disk('public')->delete($data->gambar);
-            }
-
-            // Hapus data izin
-            DB::table('pengajuan_izins')->where('id', $id)->delete();
-
-            return redirect('/presensi/izin')->with(['success' => 'Data berhasil dihapus']);
-        } else {
-            return redirect('/presensi/izin')->with(['error' => 'Data tidak ditemukan']);
-        }
-    }
-
-    public function cekPengajuan(Request $request)
-    {
-        $dari = $request->tgl_izin_dari;
-        $sampai = $request->tgl_izin_sampai;
-        $nik = Auth::guard('pegawai')->user()->nik;
-        $id = $request->id; // ambil id jika ada (untuk edit)
-
-        $cek = DB::table('pengajuan_izins')
-            ->where(function ($query) use ($dari, $sampai) {
-                $query->whereBetween('tgl_izin_dari', [$dari, $sampai])
-                    ->orWhereBetween('tgl_izin_sampai', [$dari, $sampai]);
-            })
-            ->where('nik', $nik)
-            ->when($id, function ($query, $id) {
-                return $query->where('id', '!=', $id);
-            })
-            ->exists();
-
-        return response()->json(['ada' => $cek]);
-    }
-
-
-
 }

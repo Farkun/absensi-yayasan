@@ -116,8 +116,10 @@ class IzinsakitController extends Controller
                 Storage::disk('public')->delete($gambar);
             }
             $target_path = storage_path('/app/public/'.$folderPath);
-            if (!File::exists($target_path)) File::makeDirectory($target_path);
-            $file->storeAs('public/' . $target_path, $filename);
+            if (!File::exists($target_path)) {
+                File::makeDirectory($target_path, 0755, true);
+            }
+            Storage::disk('public')->putFileAs($folderPath, $file, $filename);
             $gambar = $folderPath .'/'. $filename;
         }
 
@@ -129,7 +131,7 @@ class IzinsakitController extends Controller
             'gambar' => $gambar
         ]);
 
-        if ($update) {
+        if ($update || $request->hasFile('gambar')) {
             return redirect('/presensi/izin')->with(['success' => 'Data berhasil diupdate']);
         } else {
             return redirect('/presensi/izin')->with(['error' => 'Data gagal diupdate']);
