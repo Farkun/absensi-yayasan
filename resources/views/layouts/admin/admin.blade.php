@@ -71,7 +71,8 @@
                     <!-- <b class="logo-abbr"><img src="{{ asset('admin/images/logo.png') }}" alt=""> </b> -->
                     <!-- <span class="logo-compact"><img src="{{ asset('admin/./images/logo-compact.png') }}" alt=""></span> -->
                     <span>
-                        <img src="{{ asset('admin/images/LOGO-YPB_BULAT.png') }}" alt="" width="65">
+                        <!-- <img src="{{ asset('admin/images/LOGO-YPB_BULAT.png') }}" alt="" width="65"> -->
+                        <img src="{{ asset('assets/img/logo-bhs.png') }}" alt="" width="65">
                     </span>
             </div>
         </div>

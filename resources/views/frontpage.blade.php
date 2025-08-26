@@ -33,10 +33,10 @@
     <div id="appCapsule" class="pt-0">
         <div class="login-form mt-1">
             <div class="section">
-                <img src="{{ asset('assets/img/sample/photo/LOGO-YPB_NOBG.png') }}" alt="image" class="form-image">
+                <img src="{{ asset('assets/img/logo-bhs.png') }}" alt="image" class="form-image">
             </div>
             <div class="section mt-1">
-                <h1>Selamat Datang di BHF-Attendance</h1>
+                <h1>Selamat Datang di STP-Attendance</h1>
                 <h4>Silahkan login lewat link dibawah ini</h4>
                 <a href="/login">----- Login -----</a>
             </div>

@@ -42,7 +42,8 @@
                     <div class="form-input-content">
                         <div class="card login-form mb-0">
                             <div class="card-body pt-5">
-                            <img src="{{ asset('admin/images/LOGO-YPB_BULAT.png') }}" alt="" style="width: 250px; height: 250px; margin-left: 118px">
+                            <!-- <img src="{{ asset('admin/images/LOGO-YPB_BULAT.png') }}" alt="" style="width: 250px; height: 250px; margin-left: 118px"> -->
+                            <img src="{{ asset('assets/img/logo-bhs.png') }}" alt="" style="width: 250px; height: 250px; margin-left: 118px">
                             @if (Session::get('warning'))
                             <div class="alert alert-warning">
                                 <p>{{ Session::get('warning') }}</p>
